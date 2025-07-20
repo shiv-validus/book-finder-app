@@ -22,6 +22,7 @@ dependencies:
   shared_preferences: ^2.2.2
   sqflite: ^2.3.0
   lottie: ^2.7.0
+  google_fonts: ^6.1.0
 
   # ✅ Networking
   dio: ^5.3.3
