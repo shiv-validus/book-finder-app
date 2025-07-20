@@ -29,12 +29,11 @@ class _BookDetailsScreenState extends State<BookDetailsScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
+    )..repeat(reverse: true); // 👈 gentle back-and-forth
 
-    _tiltAnimation = Tween<double>(
-      begin: -0.02,
-      end: 0.02,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _tiltAnimation = Tween<double>(begin: -0.02, end: 0.02).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -42,48 +41,53 @@ class _BookDetailsScreenState extends State<BookDetailsScreen>
     _controller.dispose();
     super.dispose();
   }
-Widget _buildCoverWithLoader() {
-  return SizedBox(
-    height: 250,
-    child: Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (!_imageLoaded)
-            Lottie.asset(
-              'assets/lottie/book_loader.json',
-              width: 100,
-              height: 100,
-              repeat: true,
-            ),
-          AnimatedOpacity(
-            opacity: _imageLoaded ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 300),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                coverUrl,
-                width: 180,
-                height: 250,
-                fit: BoxFit.cover,
-                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                  if (frame != null || wasSynchronouslyLoaded) {
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      if (mounted) setState(() => _imageLoaded = true);
-                    });
-                  }
-                  return child;
-                },
-                errorBuilder: (_, __, ___) =>
-                    const Icon(Icons.broken_image, size: 100),
+
+  Widget _buildCoverWithLoader() {
+    return SizedBox(
+      height: 250,
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (!_imageLoaded)
+              Lottie.asset(
+                'assets/lottie/book_loader.json',
+                width: 100,
+                height: 100,
+                repeat: true,
+              ),
+            AnimatedOpacity(
+              opacity: _imageLoaded ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              child: RotationTransition(
+                turns: _tiltAnimation,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    coverUrl,
+                    width: 180,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    frameBuilder:
+                        (context, child, frame, wasSynchronouslyLoaded) {
+                      if (frame != null || wasSynchronouslyLoaded) {
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          if (mounted) setState(() => _imageLoaded = true);
+                        });
+                      }
+                      return child;
+                    },
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.broken_image, size: 100),
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +111,8 @@ Widget _buildCoverWithLoader() {
             Text(
               widget.book.authorName.join(', '),
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[700],
-              ),
+              style:
+                  theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
