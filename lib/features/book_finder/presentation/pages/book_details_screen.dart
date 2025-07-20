@@ -31,9 +31,10 @@ class _BookDetailsScreenState extends State<BookDetailsScreen>
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true); // 👈 gentle back-and-forth
 
-    _tiltAnimation = Tween<double>(begin: -0.02, end: 0.02).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _tiltAnimation = Tween<double>(
+      begin: -0.02,
+      end: 0.02,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -70,13 +71,20 @@ class _BookDetailsScreenState extends State<BookDetailsScreen>
                     fit: BoxFit.cover,
                     frameBuilder:
                         (context, child, frame, wasSynchronouslyLoaded) {
-                      if (frame != null || wasSynchronouslyLoaded) {
-                        Future.delayed(const Duration(milliseconds: 300), () {
-                          if (mounted) setState(() => _imageLoaded = true);
-                        });
-                      }
-                      return child;
-                    },
+                          if (frame != null || wasSynchronouslyLoaded) {
+                            Future.delayed(
+                              const Duration(milliseconds: 300),
+                              () {
+                                if (mounted) {
+                                  setState(() {
+                                    _imageLoaded = true;
+                                  });
+                                }
+                              },
+                            );
+                          }
+                          return child;
+                        },
                     errorBuilder: (_, __, ___) =>
                         const Icon(Icons.broken_image, size: 100),
                   ),
@@ -111,15 +119,22 @@ class _BookDetailsScreenState extends State<BookDetailsScreen>
             Text(
               widget.book.authorName.join(', '),
               textAlign: TextAlign.center,
-              style:
-                  theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[700],
+              ),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () async {
-                await LocalDatabase.instance.insertBook(widget.book);
                 if (!mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
+                final messenger = ScaffoldMessenger.of(
+                  context,
+                );
+
+                await LocalDatabase.instance.insertBook(widget.book);
+
+                if (!mounted) return;
+                messenger.showSnackBar(
                   const SnackBar(content: Text('✅ Book saved to favorites!')),
                 );
               },

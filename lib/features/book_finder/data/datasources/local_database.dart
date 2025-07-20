@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../domain/entities/book.dart';
+import 'package:flutter/foundation.dart';
 
 class LocalDatabase {
   static final LocalDatabase instance = LocalDatabase._internal();
@@ -18,7 +19,7 @@ class LocalDatabase {
   Future<Database> _initDB(String fileName) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, fileName);
-    print('📂 DB Path: $path');
+    debugPrint('📂 DB Path: $path');
     return await openDatabase(
       path,
       version: 1,
@@ -42,7 +43,7 @@ class LocalDatabase {
       'author': book.authorName.join(', '),
       'coverId': book.coverId,
     });
-    print('✅ Book saved: ${book.title}');
+    debugPrint('✅ Book saved: ${book.title}');
   }
 
   Future<List<Book>> getAllBooks() async {

@@ -15,7 +15,6 @@ class _SearchScreenState extends State<SearchScreen> {
   final _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _didTriggerAutoLoad = false;
-  String _lastAutoLoadQuery = '';
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void _onSearchChanged(String value) {
     final trimmed = value.trim();
     _didTriggerAutoLoad = false;
-    _lastAutoLoadQuery = trimmed;
     context.read<SearchBookBloc>().add(SearchBookQueryChanged(trimmed));
   }
 

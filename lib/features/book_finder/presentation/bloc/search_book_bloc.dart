@@ -7,9 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/book.dart';
 import '../../domain/usecases/search_books.dart';
+import 'package:flutter/foundation.dart';
 
 part 'search_book_event.dart';
 part 'search_book_state.dart';
+
 
 class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
   final SearchBooks searchBooks;
@@ -179,6 +181,6 @@ class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
   }
 
   void _log(String msg) {
-    print(msg);
+    debugPrint(msg);
   }
 }
