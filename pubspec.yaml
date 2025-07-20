@@ -21,6 +21,7 @@ dependencies:
   rxdart: ^0.27.7
   shared_preferences: ^2.2.2
   sqflite: ^2.3.0
+  lottie: ^2.7.0
 
   # ✅ Networking
   dio: ^5.3.3
@@ -44,3 +45,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/lottie/book_loader.json

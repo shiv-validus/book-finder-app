@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+
 import '../../domain/entities/book.dart';
-import '../pages/book_details_screen.dart'; // ✅ Import for details screen
+import '../pages/book_details_screen.dart';
 
 class BookListTile extends StatelessWidget {
   final Book book;
@@ -20,11 +21,12 @@ class BookListTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => BookDetailsScreen(book: book),
+            builder: (_) => BookDetailsScreen(book: book), // ✅ FIXED: this matches new screen
           ),
         );
       },
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         leading: SizedBox(
           width: 50,
           height: 75,
@@ -38,9 +40,9 @@ class BookListTile extends StatelessWidget {
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
                       child: Container(
-                        color: Colors.white,
                         width: 50,
                         height: 75,
+                        color: Colors.white,
                       ),
                     );
                   },
